@@ -1,5 +1,5 @@
 #!/bin/bash
-naygV="22.11.20 V 2.0"
+naygV="23.1.19 V 2.1"
 remoteV=`wget -qO- https://gitlab.com/rwkgyg/naiveproxy-yg/raw/main/naiveproxy.sh | sed  -n 2p | cut -d '"' -f 2`
 chmod +x /root/naiveproxy.sh
 red='\033[0;31m'
@@ -13,6 +13,7 @@ yellow(){ echo -e "\033[33m\033[01m$1\033[0m";}
 white(){ echo -e "\033[37m\033[01m$1\033[0m";}
 readp(){ read -p "$(yellow "$1")" $2;}
 [[ $EUID -ne 0 ]] && yellow "请以root模式运行脚本" && exit
+#[[ -e /etc/hosts ]] && grep -qE '^ *172.65.251.78 gitlab.com' /etc/hosts || echo -e '\n172.65.251.78 gitlab.com' >> /etc/hosts
 yellow " 请稍等3秒……正在扫描vps类型及参数中……"
 if [[ -f /etc/redhat-release ]]; then
 release="Centos"
@@ -95,7 +96,7 @@ fi
 [[ ! $(type -P sysctl) ]] && ($yumapt update;$yumapt install procps)
 [[ ! $(type -P qrencode) ]] && ($yumapt update;$yumapt install qrencode)
 if [[ -z $(grep 'DiG 9' /etc/hosts) ]]; then
-v4=$(curl -s4m6 api64.ipify.org -k)
+v4=$(curl -s4m6 ip.sb -k)
 if [ -z $v4 ]; then
 echo -e nameserver 2a01:4f8:c2c:123f::1 > /etc/resolv.conf
 fi
@@ -341,7 +342,7 @@ cat <<EOF > /root/naive/v2rayn.json
 EOF
 cat << EOF >/etc/systemd/system/caddy.service
 [Unit]
-Description=YGKKK-Caddy2-naiveproxy
+Description=Caddy2-naiveproxy
 Documentation=https://gitlab.com/rwkgyg/naiveproxy-yg
 After=network.target network-online.target
 Requires=network-online.target
